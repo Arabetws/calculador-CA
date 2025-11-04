@@ -237,15 +237,26 @@ class sistema_trifasico:
         P = Vrms * corrente_modulo * math.cos(delta_angulo_rad)  # Ativa
         Q = Vrms * corrente_modulo * math.sin(delta_angulo_rad)  # Reativa
         S = Vrms * corrente_modulo                                # Aparente
-
-        return Q,S,P
+        return P,Q,S
 
     def mostar_potencia_ativas(self):
-        Q, P, S = self.potencias_ativas()
+        P,Q,S = self.potencias_ativas()
         print("-" * 10, "Potências", 10 * "-")
         print(f"P (ativa)     = {P:.2f} [W]")
         print(f"Q (reativa)   = {Q:.2f} [Var]")
         print(f"S (aparente)  = {S:.2f} [VA]")
+
+    def fator_potencia(self):
+        P, Q, S = self.potencias_ativas() # Ordem intuitiva
+        if S == 0:
+            return 0
+        fp = P / S
+        return fp
+    
+    def mostrar_fp(self):
+        fp = self.fator_potencia()
+        print(f'-' *10, "Fator de potência", 10* '-')
+        print(f'f.p = {fp:.2f}')
 
 vmax = float(input("Digite o valor de vmax(V): "))
 L_mH = float(input("Digite o valor de L(mH): "))
@@ -270,4 +281,5 @@ sistema.mostrar_impedancia_eq()
 sistema.mostrar_corrente_fasorial()
 sistema.mostrar_queda_tensao()
 sistema.mostar_potencia_ativas()
+sistema.mostrar_fp()
 sistema.diagrama()
