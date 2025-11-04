@@ -1,7 +1,7 @@
 import math
 import matplotlib.pyplot as plt
 w = 377
-
+#feito por ArabeTWS
 class sistema_trifasico:
     def __init__(self,vmax, L_mH, C_uF, R, angulo):
         self.L_mH = L_mH #Valor do Indutor
@@ -22,8 +22,8 @@ class sistema_trifasico:
         print(f"Tensão RMS: {Vrms:.2f} V")
     
     def tensao_fasorial_fonte(self):
-        Vrms = self.tensao_RMS_fonte() #Pega o valoe RMS
-        ang_rad = math.radians(self.angulo)
+        Vrms = self.tensao_RMS_fonte() #Pega o valor RMS
+        ang_rad = math.radians(self.angulo)#transforma o angulo em radianos
 
         #forma retangular
         real  = Vrms * math.cos(ang_rad) #parte real 
@@ -33,40 +33,42 @@ class sistema_trifasico:
 
         #forma polar
         angulo_polar = self.angulo #pega o angulo digitafo
-        sinal_polar = "+" if angulo_polar >= 0 else "-" 
+        sinal_polar = "+" if angulo_polar >= 0 else "-" #verifica o sinal
 
-        return fasor_retangular,sinal, angulo_polar
+        return fasor_retangular,sinal, angulo_polar#retorna os valores
     
     def mostrar_fasorial_da_fonte(self):
-        fasor, sinal, angulo = self.tensao_fasorial_fonte()
+        fasor, sinal, angulo = self.tensao_fasorial_fonte()#pega os valores de tensão
+        #print
         print(f"-" * 10, "Tensão fasorial da fonte", 10 * "-")
         print(f"Fasor (forma retangular): {fasor.real:.2f}{sinal}j{abs(fasor.imag):.2f} [V]")
         print(f"Fasor (forma polar): {abs(fasor):.2f}.e{sinal}j{angulo} [V]")
 
     def reatancias_cap_ind(self):
-        self.Xc = 1 / (w * self.C_uF * 1e-6)
-        self.Xl = w * self.L_mH*1e-3
+        self.Xc = 1 / (w * self.C_uF * 1e-6)#reatancia do capacitor
+        self.Xl = w * self.L_mH*1e-3#reatancia do indutor
 
     def mostrar_reatancia(self):
-        self.reatancias_cap_ind()
+        self.reatancias_cap_ind()#pega a reatancias e printa
         print(f"-" * 10, "Reatancia capacitiva e indutiva", 10 * "-")
         print(f'Xc = {self.Xc:.2f}[Ω]')
         print(f'Xl = {self.Xl:.2f}[Ω]')
     
     def impedancia_equivalente(self):
-        self.reatancias_cap_ind()
-        Zeq = complex(self.R, self.Xl - self.Xc)
-        real = Zeq.real
-        imag = Zeq.imag
-        sinal = "+" if imag >= 0 else "-"
+        self.reatancias_cap_ind()#captura os valores de reatancia
+        Zeq = complex(self.R, self.Xl - self.Xc)#calcula a impedancia 
+        real = Zeq.real#calcula a forma real da impedancia
+        imag = Zeq.imag#calcula a forma polar da impedancia
+        sinal = "+" if imag >= 0 else "-"#verifica o sinal
         #forma polar
+        #pitagoras
         modulo = abs(Zeq)
         angulo_rad = math.atan2(imag, real)
         angulo_graus = math.degrees(angulo_rad)
         sinal = "+" if angulo_graus>= 0 else "-"
         return Zeq, angulo_graus, real, sinal, imag, modulo, 
     
-    def mostrar_impedancia_eq(self):
+    def mostrar_impedancia_eq(self):#print
         Zeq,angulo, real, sinal, imag, modulo= self.impedancia_equivalente()
         print(f"-"*10, "Impedancia equivalente", 10 * "-")
         print(f'Forma Retangular = {real:.2f} {sinal} J {abs(imag):.2f}[Ω]')
@@ -75,7 +77,7 @@ class sistema_trifasico:
     def corrente_fasorial(self):
         Vrms = self.tensao_RMS_fonte()
         _, _, angulo_fonte = self.tensao_fasorial_fonte()
-        Zeq, angulo_impedancia, *_ = self.impedancia_equivalente()
+        Zeq, angulo_impedancia, *_ = self.impedancia_equivalente()#pega os valores
             
         modulo_Z = abs(Zeq)
         corrente_modulo = Vrms / modulo_Z
